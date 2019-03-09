@@ -1,0 +1,16 @@
+{
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "require": true
+  },
+    "extends": [
+      "airbnb-base",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "semi": ["error", "never"],
+      "class-methods-use-this": 0
+    }
+}
