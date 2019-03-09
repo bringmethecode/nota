@@ -1,7 +1,6 @@
 const storeHelpers = {
   getNote: store => store.get('note', ''),
   saveNote: (store, newNote) => {
-    console.log('SAVENOTE', newNote)
     store.set('note', newNote)
   },
   getWindowState: store => store.get('windowState', {}),
