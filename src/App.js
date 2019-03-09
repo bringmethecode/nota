@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useEffect } from 'react'
 import { hot } from 'react-hot-loader'
+import './app.css'
 
 const { ipcRenderer } = window.require('electron')
 
@@ -17,12 +18,15 @@ const App = () => {
   useEffect(() => getValue(), [])
 
   return (
-    <input
-      placeholder='Type new note...'
-      value={value}
-      onChange={e => setValue(e.target.value)}
-      onBlur={storeValue}
-    />
+    <>
+      <span>#</span>
+      <input
+        placeholder='Write a new note...'
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onBlur={storeValue}
+      />
+    </>
   )
 }
 

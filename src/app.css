@@ -1,0 +1,45 @@
+@import '~normalize.css';
+
+:root {
+  --yellow: #fff205;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-app-region: drag;
+  padding: 2.5em 1.8em;
+  height: 100%;
+  width: 100%;
+  font-family: 'Overpass Mono', monospace;
+  color: var(--yellow);
+  display: flex;
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#groot {
+  display: flex;
+  width: 100%;
+}
+
+#groot > span {
+  line-height: 1.4rem;
+  margin-right: 10px;
+}
+
+input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--yellow);
+  outline: none;
+  flex-grow: 1;
+}
