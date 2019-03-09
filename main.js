@@ -1,15 +1,22 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const { app, BrowserWindow, ipcMain } = require('electron')
-const DataStore = require('./DataStore')
+const Store = require('electron-store')
+const {
+  getWindowState, setWindowState, getNote, saveNote,
+} = require('./storeHelpers')
 
-const noteData = new DataStore({ name: 'nota' })
-
+const store = new Store({ name: 'nota' })
 let mainWindow
+let a = true
+const windowState = getWindowState(store)
+const storedNote = getNote(store)
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 100,
+    x: windowState.x || 0,
+    y: windowState.y || 0,
+    width: windowState.width || 500,
+    height: windowState.height || 100,
     backgroundColor: '#050505',
     alwaysOnTop: true,
     title: 'nota',
@@ -18,22 +25,31 @@ const createWindow = () => {
       nodeIntegration: true,
     },
   })
+  const { webContents } = mainWindow
   mainWindow.loadFile('index.html')
-  mainWindow.once('show', () => mainWindow.webContents.send('nota', noteData.note))
-  // mainWindow.webContents.openDevTools()
+  mainWindow.once('show', () => webContents.send('note', storedNote))
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
+  mainWindow.on('close', (e) => {
+    a = !a
+    webContents.send('ready-close')
+    if (a) e.preventDefault()
+  })
+
   ipcMain.on('get-note', () => {
-    const note = noteData.getNote()
-    mainWindow.send('nota', note)
+    mainWindow.send('note', storedNote)
   })
 
   ipcMain.on('save-note', (e, newNote) => {
-    const updatedNote = noteData.updateNote(newNote)
-    mainWindow.send('nota', updatedNote)
+    saveNote(store, newNote)
+  })
+
+  ipcMain.on('closed', () => {
+    app.quit()
   })
 }
 
@@ -43,6 +59,8 @@ app.on('window-all-closed', () => {
   // if (process.platform !== 'darwin') {
   //   app.quit()
   // }
+  const bounds = mainWindow.getBounds()
+  setWindowState(store, bounds)
   app.quit()
 })
 
