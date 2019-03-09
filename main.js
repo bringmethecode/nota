@@ -9,14 +9,18 @@ let mainWindow
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 500,
-    height: 800,
+    height: 100,
+    backgroundColor: '#050505',
+    alwaysOnTop: true,
+    title: 'nota',
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
       nodeIntegration: true,
     },
   })
   mainWindow.loadFile('index.html')
   mainWindow.once('show', () => mainWindow.webContents.send('nota', noteData.note))
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
