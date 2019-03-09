@@ -1,22 +1,29 @@
-import React from "react";
-import { hot } from "react-hot-loader";
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import rootReducer from "./reducers";
-import { Route, Link } from 'react-router-dom';
-import Home from "./pages/Home";
-import { Provider } from 'react-redux';
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useState, useEffect } from 'react'
+import { hot } from 'react-hot-loader'
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const { ipcRenderer } = window.require('electron')
 
-class App extends React.Component {
-    render() {
-        return (
-            <Provider store={store}>
-                <Home/>
-            </Provider>
-        );
-    }
+const App = () => {
+  const [value, setValue] = useState('')
+
+  const getValue = () => {
+    ipcRenderer.send('get-note')
+    ipcRenderer.on('nota', (e, note) => setValue(note))
+  }
+
+  const storeValue = () => ipcRenderer.send('save-note', value)
+
+  useEffect(() => getValue(), [])
+
+  return (
+    <input
+      placeholder='Type new note...'
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      onBlur={storeValue}
+    />
+  )
 }
 
-export default hot(module)(App); 
+export default hot(module)(App)
