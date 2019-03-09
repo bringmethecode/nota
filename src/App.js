@@ -1,33 +1,36 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useEffect } from 'react'
+import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 import './app.css'
 
 const { ipcRenderer } = window.require('electron')
 
-const App = () => {
-  const [value, setValue] = useState('')
-
-  const getValue = () => {
-    ipcRenderer.send('get-note')
-    ipcRenderer.on('nota', (e, note) => setValue(note))
+class App extends Component {
+  state = {
+    value: '',
   }
 
-  const storeValue = () => ipcRenderer.send('save-note', value)
+  componentDidMount = async () => {
+    ipcRenderer.send('get-note')
+    ipcRenderer.on('note', (e, note) => this.setState({ value: note }))
+    await ipcRenderer.on('ready-close', () => {
+      ipcRenderer.send('save-note', this.state.value)
+      ipcRenderer.send('closed')
+    })
+  }
 
-  useEffect(() => getValue(), [])
-
-  return (
-    <>
-      <span>#</span>
-      <input
-        placeholder='Write a new note...'
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onBlur={storeValue}
-      />
-    </>
-  )
+  render() {
+    return (
+      <>
+        <span>#</span>
+        <input
+          placeholder='Write a new note...'
+          value={this.state.value}
+          onChange={e => this.setState({ value: e.target.value })}
+        />
+      </>
+    )
+  }
 }
 
 export default hot(module)(App)
