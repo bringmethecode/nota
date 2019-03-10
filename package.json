@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "dev": "webpack --watch",
-    "start": "electron ."
+    "start": "electron .",
+    "start-dev": "DEV_TOOLS=true electron ."
   },
   "repository": "https://github.com/bringmethecode/nota",
   "keywords": [
@@ -14,8 +15,8 @@
     "react",
     "note"
   ],
-  "author": "Ansky",
-  "license": "GNU GPLv3",
+  "author": "Andre Aldana, <ansky.sh>",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
