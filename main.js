@@ -35,7 +35,7 @@ const createWindow = () => {
   const { webContents } = mainWindow
   mainWindow.loadFile('index.html')
   mainWindow.once('show', () => webContents.send('note', storedNote))
-  // mainWindow.webContents.openDevTools()
+  if (process.env.DEV_TOOLS === 'true') mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
