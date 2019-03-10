@@ -15,7 +15,7 @@
     "note"
   ],
   "author": "Ansky",
-  "license": "CC0-1.0",
+  "license": "GNU GPLv3",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
@@ -43,7 +43,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
+    "dotenv": "^6.2.0",
     "electron-store": "^2.0.0",
+    "fontfaceobserver": "^2.1.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
