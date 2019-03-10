@@ -10,7 +10,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
-        options: { presets: ['@babel/env'] },
+        options: { presets: ['@babel/preset-env'] },
       },
       {
         test: /\.css$/,
@@ -24,7 +24,12 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist/'),
     publicPath: './dist/',
-    filename: '../bundle.js',
+    filename: 'bundle.js',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   devServer: {
     contentBase: path.join(__dirname, 'public/'),
