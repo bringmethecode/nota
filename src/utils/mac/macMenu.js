@@ -22,6 +22,11 @@ const template = store => [
         accelerator: 'CmdOrCtrl+Q',
         role: 'quit',
       },
+      {
+        label: 'Restart',
+        role: 'reload',
+        visible: process.env.DEV_TOOLS === 'true',
+      },
     ],
   },
 ]
