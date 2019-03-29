@@ -1,14 +1,13 @@
-# Nota ✍
+![nota](preview.png)
 
 ```
 npm run dev
 npm start
 ```
 
+Nota is an open source app made with Electron. It's made to work as a visual reminder of something. it is small, and is always on top of other windows.
 
 ## License ✏️
-
-Nota is an open source app made with Electron.
 
 Copyright (C) 2019 Andre Aldana
 
