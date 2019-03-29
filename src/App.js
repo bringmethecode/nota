@@ -27,12 +27,10 @@ class App extends Component {
   render() {
     return (
       <>
-      {
-        this.state.loading ? (
-          <div className='loader' />
-        ) : (
-          <>
-            <h1 className='title'>Note:</h1>
+        {
+          this.state.loading ? (
+            <div className='loader' />
+          ) : (
             <div className='note'>
               <span>#</span>
               <textarea
@@ -41,9 +39,8 @@ class App extends Component {
                 onChange={e => this.setState({ value: e.target.value })}
               />
             </div>
-          </>
-        )
-      }
+          )
+        }
       </>
     )
   }
