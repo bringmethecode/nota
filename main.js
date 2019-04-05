@@ -35,7 +35,7 @@ const createWindow = () => {
   const { webContents } = mainWindow
   mainWindow.loadFile('index.html')
   mainWindow.once('show', () => webContents.send('note', storedNote))
-  if (process.env.DEV_TOOLS === 'true') mainWindow.webContents.openDevTools()
+  if (process.env.DEV_TOOLS === 'true') webContents.openDevTools()
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -56,6 +56,7 @@ const createWindow = () => {
 
   ipcMain.on('save-note', (e, newNote) => {
     saveNote(store, newNote)
+    webContents.send('note', newNote)
   })
 
   ipcMain.on('closed', () => {
@@ -69,9 +70,6 @@ const createWindow = () => {
 app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
-  // if (process.platform !== 'darwin') {
-  //   app.quit()
-  // }
   const bounds = mainWindow.getBounds()
   setWindowState(store, bounds)
   app.quit()
