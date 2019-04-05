@@ -17,12 +17,14 @@ class App extends Component {
     await inconsolataFont.load()
     this.setState({ loading: false })
     ipcRenderer.send('get-note')
-    ipcRenderer.on('note', (e, note) => this.setState({ value: note }))
+    ipcRenderer.on('note', (e, note) => this.updateValue(note))
     await ipcRenderer.on('ready-close', () => {
       ipcRenderer.send('save-note', this.state.value)
       ipcRenderer.send('closed')
     })
   }
+
+  updateValue = value => this.setState({ value })
 
   render() {
     return (
@@ -34,9 +36,10 @@ class App extends Component {
             <div className='note'>
               <span>#</span>
               <textarea
+                id='noteText'
                 placeholder='Write a new note...'
                 value={this.state.value}
-                onChange={e => this.setState({ value: e.target.value })}
+                onChange={e => this.updateValue(e.target.value)}
               />
             </div>
           )
