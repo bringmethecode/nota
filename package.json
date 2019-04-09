@@ -1,60 +1,168 @@
 {
   "name": "nota",
+  "productName": "Nota",
   "version": "1.0.0",
-  "description": "minimal note reminder",
-  "main": "main.js",
+  "description": "minimal always-on-top note reminder",
   "scripts": {
-    "dev": "webpack --watch",
-    "start": "electron .",
-    "start-dev": "DEV_TOOLS=true electron .",
-    "test": "mocha"
+    "build": "webpack --mode production --colors ./src/index.js --output ./dist/bundle.js",
+    "dev": "webpack-dev-server --hot --mode development --colors ./src/index.js --output ./dist/bundle.js",
+    "lint": "NODE_ENV=development eslint --format=pretty .",
+    "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
+    "package": "yarn build && electron-builder build --publish never",
+    "package-all": "yarn build && electron-builder build -mwl",
+    "package-ci": "yarn build && electron-builder --publish always",
+    "package-linux": "yarn build && electron-builder build --linux",
+    "package-win": "yarn build && electron-builder build --win --x64",
+    "start": "NODE_ENV=development electron -r @babel/register .",
+    "start-prod": "NODE_ENV=production electron -r @babel/register .",
+    "test": "NODE_ENV=test BABEL_DISABLE_CACHE=1 jest",
+    "test-prod": "yarn build && yarn start-prod",
+    "test-all": "yarn lint && yarn build && yarn test && yarn test-e2e",
+    "test-e2e": "NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.js",
+    "test-e2e-live": "NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
+    "test-watch": "yarn test --watch"
   },
-  "repository": "https://github.com/bringmethecode/nota",
-  "keywords": [
-    "Electron",
-    "js",
-    "react",
-    "note"
-  ],
-  "author": "Andre Aldana, <ansky.sh>",
-  "license": "GPL-3.0-or-later",
+  "build": {
+    "productName": "Nota",
+    "appId": "sh.ansky.nota",
+    "files": [
+      "dist/",
+      "src/index.html",
+      "index.js",
+      "package.json"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "msi"
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "bringmethecode",
+      "repo": "nota",
+      "private": false
+    }
+  },
+  "author": {
+    "name": "Andre Aldana",
+    "email": "dev@ansky.sh",
+    "url": "https://ansky.sh"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/bringmethecode/nota",
+  "jest": {
+    "testURL": "http://localhost/",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
+    "transform": {
+      "^.+\\.js?$": "babel-jest"
+    }
+  },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@babel/plugin-transform-runtime": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.2.0",
+    "@babel/plugin-transform-react-constant-elements": "^7.0.0",
+    "@babel/plugin-transform-react-inline-elements": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
-    "babel": "^6.23.0",
+    "@babel/register": "^7.4.0",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.5",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "css-loader": "^2.1.1",
-    "electron": "^4.0.8",
-    "eslint": "^5.15.1",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.20",
+    "css-loader": "^1.0.1",
+    "electron": "^4.1.4",
+    "electron-builder": "^20.34.0",
+    "electron-devtools-installer": "^2.2.4",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.7.0",
+    "enzyme-to-json": "^3.3.4",
+    "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-react": "^7.12.4",
-    "mocha": "^6.0.2",
-    "react-hot-loader": "^4.8.0",
+    "eslint-formatter-pretty": "^2.0.0",
+    "eslint-import-resolver-webpack": "^0.10.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-testcafe": "^0.2.1",
+    "file-loader": "^2.0.0",
+    "jest": "^23.6.0",
+    "mini-css-extract-plugin": "^0.4.4",
+    "node-sass": "^4.10.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
+    "postcss-loader": "^3.0.0",
+    "react-test-renderer": "^16.6.3",
+    "sass-loader": "^7.1.0",
+    "sinon": "^7.1.1",
     "spectron": "^5.0.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.2.1"
-  },
-  "engines": {
-    "node": "11.x"
+    "stylelint": "^9.8.0",
+    "stylelint-config-standard": "^18.2.0",
+    "terser-webpack-plugin": "^1.2.3",
+    "testcafe": "^0.23.2",
+    "testcafe-browser-provider-electron": "^0.0.6",
+    "testcafe-live": "^0.1.4",
+    "testcafe-react-selectors": "^3.0.0",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.26.0",
+    "webpack-bundle-analyzer": "^3.2.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.2.1",
+    "yarn": "^1.12.3"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.4",
-    "dotenv": "^6.2.0",
+    "devtron": "^1.4.0",
+    "electron-debug": "^2.0.0",
+    "electron-log": "^2.2.17",
     "electron-store": "^2.0.0",
+    "electron-updater": "^3.2.3",
     "fontfaceobserver": "^2.1.0",
-    "normalize.css": "^8.0.1",
+    "html-webpack-plugin": "^4.0.0-beta.5",
     "react": "^16.8.4",
+    "react-autosize-textarea": "^7.0.0",
     "react-dom": "^16.8.4",
-    "webpack-target-electron-renderer": "^0.4.0"
-  }
+    "react-hot-loader": "^4.3.12",
+    "webpack-merge": "^4.2.1"
+  },
+  "devEngines": {
+    "node": ">=10.x",
+    "yarn": ">=1.11.x"
+  },
+  "browserslist": "last 2 Chrome versions"
 }
