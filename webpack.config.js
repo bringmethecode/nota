@@ -1,41 +1,107 @@
-const path = require('path')
-const webpack = require('webpack')
+const TerserPlugin = require('terser-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
-  entry: './renderer.js',
-  mode: 'development',
+const config = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
-        exclude: /(node_modules)/,
-        loader: 'babel-loader',
-        options: { presets: ['@babel/preset-env'] },
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            cacheDirectory: true
+          }
+        }
       },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-    ],
+    ]
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './src/index.html'
+    })
+  ],
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.json']
   },
-  output: {
-    path: path.join(__dirname, '/dist/'),
-    publicPath: './dist/',
-    filename: 'bundle.js',
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
-  devServer: {
-    contentBase: path.join(__dirname, 'public/'),
-    port: 3000,
-    publicPath: 'http://localhost:3000/dist/',
-    hotOnly: true,
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+}
+
+module.exports = (env, argv) => {
+  if (argv.mode === 'development') {
+    config.devtool = 'source-map'
+    config.module.rules = [
+      ...config.module.rules,
+      {
+        test: /\.scss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
+      }
+    ]
+    config.plugins = [
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+        chunkFilename: '[id].css',
+      }),
+      ...config.plugins
+    ]
+    config.devServer = {
+      port: 3000,
+      publicPath: '/dist/',
+      hotOnly: true,
+    }
+  }
+
+  if (argv.mode === 'production') {
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            output: {
+              comments: false,
+            },
+          },
+          cache: true,
+          sourceMap: true,
+          parallel: true
+        }),
+        new OptimizeCSSAssetsPlugin({})
+      ],
+    }
+    config.module.rules = [
+      ...config.module.rules,
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
+        ]
+      }
+    ]
+    config.plugins = [
+      new MiniCssExtractPlugin({
+        filename: '[name]-[hash].css',
+        chunkFilename: '[id]-[hash].css',
+      }),
+      ...config.plugins,
+      ...(process.env.ANALYZER === 'true' ? new BundleAnalyzerPlugin({
+        analyzerMode: 'server',
+      }) : [])
+    ]
+    config.node = {
+      __dirname: false,
+      __filename: false
+    }
+  }
+
+  return config
 }
