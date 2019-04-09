@@ -1,0 +1,114 @@
+@import '../utils/normalize.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-app-region: drag;
+  padding: 40px;
+  height: 100%;
+  width: 100%;
+  font-family: 'Inconsolata', monospace;
+  display: flex;
+  align-items: center;
+  &:hover {
+    .close-btn {
+      opacity: 1;
+    }
+  }
+}
+
+body {
+  height: 100%;
+  margin: auto;
+}
+
+#groot {
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  display: flex;
+  align-items: flex-start;
+  .close-btn {
+    width: 10px;
+    height: 10px;
+    background: #F05D5E;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    border-radius: 12px;
+    opacity: 0;
+    transition: all 300ms ease-in-out;
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+  .hash {
+    font-size: 1.3rem;
+    margin-right: 10px;
+    color: #F2EF5C;
+  }
+  textarea {
+    background: transparent;
+    border: none;
+    color: white;
+    resize: none;
+    outline: none;
+    font-size: 1.3rem;
+    padding: 0;
+    &::placeholder {
+      position: absolute;
+      overflow: hidden;
+    }
+  }
+}
+
+.loader {
+  transform: translate3d(0, 0, 0);
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background: #666;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: auto;
+  text-indent: -100px;
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  &::before {
+    animation: loader 3s infinite;
+    transform-origin: 0 50%;
+    left: 0;
+    background: #c1c1c1;
+  }
+  &::after {
+    animation: loader 3s 0.2s reverse infinite;
+    transform-origin: 100% 50%;
+    right: 0;
+    background: #e5e5e5;
+  } 
+}
+
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
