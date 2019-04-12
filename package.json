@@ -26,17 +26,19 @@
   "build": {
     "productName": "Nota",
     "appId": "sh.ansky.nota",
-    "files": [
-      "dist/",
-      "dist/index.html",
-      "index.js",
-      "package.json"
-    ],
+    "copyright": "Copyright © 2019 Andre Aldana",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "resources/icon.icns"
+
+    },
     "dmg": {
+      "title": "Nota App Installer",
       "contents": [
         {
           "x": 130,
-          "y": 220
+          "y": 220,
+          "type": "file"
         },
         {
           "x": 410,
@@ -44,13 +46,21 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "window": {
+        "x": 300,
+        "y": 300,
+        "width": 400,
+        "height": 300
+      }
     },
     "win": {
       "target": [
         "nsis",
-        "msi"
-      ]
+        "msi",
+        "portable"
+      ],
+      "icon": "resources/icon.ico"
     },
     "linux": {
       "target": [
