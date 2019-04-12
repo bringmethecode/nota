@@ -18,7 +18,8 @@ class App extends Component {
     await inconsolataFont.load()
     ipcRenderer.send('get-note')
     ipcRenderer.on('retrieve-note', (e, note) => {
-      this.setState({ loading: false, value: note })
+      this.setState({ value: note })
+      setTimeout(() => this.setState({ loading: false }), 1000)
     })
     ipcRenderer.on('ready-to-close', () => {
       ipcRenderer.send('close-app')

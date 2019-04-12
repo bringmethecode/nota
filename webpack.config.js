@@ -1,3 +1,4 @@
+/* eslint-disable no-new */
 const TerserPlugin = require('terser-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -21,8 +22,10 @@ const config = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html'
+    new HtmlWebpackPlugin({ template: './src/index.html' }),
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
     })
   ],
   resolve: {
@@ -44,13 +47,6 @@ module.exports = (env, argv) => {
           'sass-loader'
         ]
       }
-    ]
-    config.plugins = [
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css',
-      }),
-      ...config.plugins
     ]
     config.devServer = {
       port: 3000,
@@ -87,16 +83,13 @@ module.exports = (env, argv) => {
         ]
       }
     ]
-    config.plugins = [
-      new MiniCssExtractPlugin({
-        filename: '[name]-[hash].css',
-        chunkFilename: '[id]-[hash].css',
-      }),
-      ...config.plugins,
-      ...(process.env.ANALYZER === 'true' ? new BundleAnalyzerPlugin({
-        analyzerMode: 'server',
-      }) : [])
-    ]
+
+    if (process.env.ANALYZER === 'true') {
+      config.plugins = [
+        ...config.plugins,
+        new BundleAnalyzerPlugin()
+      ]
+    }
     config.node = {
       __dirname: false,
       __filename: false

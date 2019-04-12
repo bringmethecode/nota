@@ -11647,7 +11647,7 @@ testcafe-live@^0.1.4:
     log-update-async-hook "^2.0.2"
     wrap-ansi "^3.0.1"
 
-testcafe-react-selectors@^3.0.0:
+testcafe-react-selectors@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/testcafe-react-selectors/-/testcafe-react-selectors-3.1.0.tgz#c531d6d6a856935971dd3331f5416df420b65aa9"
   integrity sha512-o2APYvtIqWdi7wkCFoQLbC5SjboqCA3iW1k9PvfbxxerjQuvUfZMv4QAwVi4SNQ8veK/NSiuSNRP7na0YqNDyQ==

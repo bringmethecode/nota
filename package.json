@@ -5,6 +5,7 @@
   "description": "minimal always-on-top note reminder",
   "scripts": {
     "build": "webpack --mode production --colors ./src/index.js --output ./dist/bundle.js",
+    "analyze": "ANALYZER=true webpack --mode production --colors ./src/index.js --output ./dist/bundle.js",
     "dev": "webpack-dev-server --hot --mode development --colors ./src/index.js --output ./dist/bundle.js",
     "lint": "NODE_ENV=development eslint --format=pretty .",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
@@ -16,10 +17,10 @@
     "start": "NODE_ENV=development electron -r @babel/register .",
     "start-prod": "NODE_ENV=production electron -r @babel/register .",
     "test": "NODE_ENV=test BABEL_DISABLE_CACHE=1 jest",
-    "test-prod": "yarn build && yarn start-prod",
+    "test-prod": "DEBUG_PROD=true yarn build && yarn start-prod",
     "test-all": "yarn lint && yarn build && yarn test && yarn test-e2e",
-    "test-e2e": "NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.js",
-    "test-e2e-live": "NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.js",
+    "test-e2e": "NODE_ENV=test testcafe electron:./ ./test/e2e/App.test.js",
+    "test-e2e-live": "NODE_ENV=test testcafe-live electron:./ ./test/e2e/App.test.js",
     "test-watch": "yarn test --watch"
   },
   "build": {
@@ -27,7 +28,7 @@
     "appId": "sh.ansky.nota",
     "files": [
       "dist/",
-      "src/index.html",
+      "dist/index.html",
       "index.js",
       "package.json"
     ],
@@ -138,7 +139,7 @@
     "testcafe": "^0.23.2",
     "testcafe-browser-provider-electron": "^0.0.6",
     "testcafe-live": "^0.1.4",
-    "testcafe-react-selectors": "^3.0.0",
+    "testcafe-react-selectors": "^3.1.0",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",
     "webpack-bundle-analyzer": "^3.2.0",

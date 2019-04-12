@@ -13,7 +13,6 @@ import {
 const devEnv = process.env.NODE_ENV === 'development'
 const debugProd = process.env.DEBUG_PROD === 'true'
 const store = new Store({ name: 'nota' })
-const filesURL = devEnv ? 'http://localhost:3000/dist/' : 'dist/index.html'
 
 export default class AppUpdater {
   constructor() {
@@ -24,7 +23,6 @@ export default class AppUpdater {
 }
 
 let mainWindow = null
-let readyToClose = false
 const windowState = getWindowState(store)
 const storedNote = getNote(store)
 
@@ -51,7 +49,9 @@ const createWindow = async () => {
     },
   })
   const { webContents } = mainWindow
-  mainWindow.loadURL(filesURL)
+  if (devEnv) mainWindow.loadURL('http://localhost:3000/dist/')
+  else mainWindow.loadFile('./dist/index.html')
+
   mainWindow.once('show', () => webContents.send('retrieve-note', storedNote))
   if (devEnv || debugProd) {
     await installExtension(REACT_DEVELOPER_TOOLS).catch(e => throw e)
@@ -83,10 +83,9 @@ const createWindow = async () => {
   })
 
   ipcMain.on('close-app', () => {
-    /* the real quit() */
-    readyToClose = true
     app.quit()
   })
+
   const update = new AppUpdater()
   update()
 }
