@@ -44,19 +44,21 @@ class App extends Component {
           this.state.loading ? (
             <div className='loader' />
           ) : (
-            <div className='app'>
+            <>
               <span className='close-btn' onClick={this.closeWindow} />
-              <span className='hash'>#</span>
-              <TextareaAutosize
-                placeholder='new reminder ✏️'
-                value={this.state.value}
-                onChange={e => this.updateValue(e.target.value)}
-                maxRows={20}
-                onResize={({
-                  srcElement: { clientWidth, clientHeight }
-                }) => this.resizeWindow(clientWidth, clientHeight)}
-              />
-            </div>
+              <div className='app'>
+                <span className='hash'>#</span>
+                <TextareaAutosize
+                  placeholder='New reminder...'
+                  value={this.state.value}
+                  onChange={e => this.updateValue(e.target.value)}
+                  maxRows={20}
+                  onResize={({
+                    srcElement: { clientWidth, clientHeight }
+                  }) => this.resizeWindow(clientWidth, clientHeight)}
+                />
+              </div>
+            </>
           )
         }
       </>

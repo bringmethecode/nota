@@ -93,12 +93,6 @@ const createWindow = async () => {
 
 app.on('ready', createWindow)
 
-// app.on('window-all-closed', () => {
-//   const bounds = mainWindow.getBounds()
-//   setWindowState(store, bounds)
-//   app.quit()
-// })
-
 app.on('activate', () => {
   if (mainWindow === null) createWindow()
 })
